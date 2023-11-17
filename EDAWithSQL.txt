@@ -1,0 +1,34 @@
+EDAWithSQL:-
+
+
+!pip install sqlalchemy==1.3.9
+!pip install ibm_db_sa
+!pip install ipython-sql
+
+%load_ext sql
+
+%sql ibm_db_sa://lxm24160:SwSSFqhGToj4kpch@8e359033-a1c9-4643-82ef-8ac06f5107eb.bs2io90l08kqb1od8lcg.databases.appdomain.cloud:30120/bludb?security=SSL
+
+import ibm_db
+%sql ibm_db_sa://
+
+%sql SELECT DISTINCT LAUNCH_SITE as "Launch_Sites" FROM SPACEX;
+
+%sql SELECT * FROM SPACEX WHERE LAUNCH_SITE LIKE 'CCA%' LIMIT 5;
+
+%sql SELECT SUM(PAYLOAD_MASS__KG_) AS "Total payload mass by NASA (CRS)" FROM SPACEX WHERE CUSTOMER = 'NASA (CRS)'
+
+%sql SELECT AVG(PAYLOAD_MASS__KG_) AS "Average payload mass by Booster Version F9 v1.1" FROM SPACEX WHERE BOOSTER_VERSION = 'F9 v1.1';
+
+%sql SELECT MIN(DATE) AS "Date of first successful landing outcome in ground pad" FROM SPACEX WHERE LANDING_OUTCOME = 'Success (ground pad)';
+
+%sql SELECT BOOSTER_VERSION FROM SPACEX  WHERE LANDING_OUTCOME = 'Success (drone ship)' AND payload_mass__kg_ BETWEEN 4000 AND 6000;
+
+%sql SELECT number_of_success_outcomes, number_of_failure_outcomes FROM (SELECT COUNT(*) AS number_of_success_outcomes FROM SPACEX WHERE MISSION_OUTCOME LIKE 'Success%')
+
+%sql SELECT DISTINCT BOOSTER_VERSION FROM SPACEX WHERE PAYLOAD_MASS__KG_ =(SELECT MAX(PAYLOAD_MASS__KG_) FROM SPACEX);
+
+%sql SELECT DATE, BOOSTER_VERSION, LAUNCH_SITE FROM SPACEX WHERE year(DATE) = '2015' AND LANDING_OUTCOME = 'Failure (drone ship)';
+
+%sql SELECT LANDING_OUTCOME, COUNT(LANDING_OUTCOME) AS Landing_Count FROM SPACEX WHERE DATE BETWEEN '2010-06-04' AND '2017-03-20' GROUP BY  LANDING_OUTCOME ORDER BY COUNT(LANDING_OUTCOME) DESC;
+
